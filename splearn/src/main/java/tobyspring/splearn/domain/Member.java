@@ -14,7 +14,7 @@ import static tobyspring.splearn.domain.MemberStatus.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Member {
 
-    private String email;
+    private Email email;
     private String nickname;
     private String passwordHash;
     private MemberStatus status;
@@ -34,7 +34,9 @@ public class Member {
     public static Member create(MemberCreateRequest createRequest, PasswordEncoder passwordEncoder) {
         Member member = new Member();
 
-        member.email = requireNonNull(createRequest.email());
+        String email = createRequest.email();
+
+        member.email = new Email(requireNonNull(email));
         member.nickname = requireNonNull(createRequest.nickname());
         member.passwordHash = requireNonNull(passwordEncoder.encode(createRequest.password()));
 
