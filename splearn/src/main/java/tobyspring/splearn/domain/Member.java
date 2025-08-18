@@ -12,14 +12,14 @@ import static tobyspring.splearn.domain.MemberStatus.*;
 public class Member {
 
     private final String email;
-    private final String nickname;
-    private final String passwordHash;
+    private String nickname;
+    private String passwordHash;
     private MemberStatus status;
 
-    public Member(String email, String nickname, String passwordHash) {
+    private Member(String email, String nickname, String passwordHash) {
         this.email = requireNonNull(email);
         this.nickname = requireNonNull(nickname);
-        this.passwordHash = passwordHash;
+        this.passwordHash = requireNonNull(passwordHash);
 
         this.status = PENDING;
     }
@@ -36,4 +36,19 @@ public class Member {
         this.status = DEACTIVATED;
     }
 
+    public static Member create(String email, String nickname, String password, PasswordEncoder passwordEncoder) {
+        return new Member(email, nickname, passwordEncoder.encode(password));
+    }
+
+    public boolean verifyPassword(String password, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(password, this.passwordHash);
+    }
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void changePassword(String password, PasswordEncoder passwordEncoder) {
+        this.passwordHash = passwordEncoder.encode(password);
+    }
 }
