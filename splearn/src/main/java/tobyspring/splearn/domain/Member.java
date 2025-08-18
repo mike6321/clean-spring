@@ -1,6 +1,8 @@
 package tobyspring.splearn.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import static java.util.Objects.requireNonNull;
@@ -9,20 +11,13 @@ import static tobyspring.splearn.domain.MemberStatus.*;
 
 @Getter
 @ToString
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Member {
 
-    private final String email;
+    private String email;
     private String nickname;
     private String passwordHash;
     private MemberStatus status;
-
-    private Member(String email, String nickname, String passwordHash) {
-        this.email = requireNonNull(email);
-        this.nickname = requireNonNull(nickname);
-        this.passwordHash = requireNonNull(passwordHash);
-
-        this.status = PENDING;
-    }
 
     public void activate() {
         state(this.status == PENDING, "PENDING 상태의 회원만 활성화할 수 있습니다.");
@@ -36,8 +31,16 @@ public class Member {
         this.status = DEACTIVATED;
     }
 
-    public static Member create(String email, String nickname, String password, PasswordEncoder passwordEncoder) {
-        return new Member(email, nickname, passwordEncoder.encode(password));
+    public static Member create(MemberCreateRequest createRequest, PasswordEncoder passwordEncoder) {
+        Member member = new Member();
+
+        member.email = requireNonNull(createRequest.email());
+        member.nickname = requireNonNull(createRequest.nickname());
+        member.passwordHash = requireNonNull(passwordEncoder.encode(createRequest.password()));
+
+        member.status = PENDING;
+
+        return member;
     }
 
     public boolean verifyPassword(String password, PasswordEncoder passwordEncoder) {
@@ -45,10 +48,15 @@ public class Member {
     }
 
     public void changeNickname(String nickname) {
-        this.nickname = nickname;
+        this.nickname = requireNonNull(nickname);
     }
 
     public void changePassword(String password, PasswordEncoder passwordEncoder) {
-        this.passwordHash = passwordEncoder.encode(password);
+        this.passwordHash = passwordEncoder.encode(requireNonNull(password));
     }
+
+    public boolean isActive() {
+        return this.status == ACTIVE;
+    }
+
 }

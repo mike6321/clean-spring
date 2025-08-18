@@ -27,7 +27,8 @@ class MemberTest {
                 return encode(password).equals(passwordHash);
             }
         };
-        this.member = Member.create("junwoo.choi@test.com", "junwoo", "secret", passwordEncoder);
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("junwoo.choi@test.com", "junwoo", "secret");
+        this.member = Member.create(memberCreateRequest, passwordEncoder);
     }
 
     @Test
@@ -37,7 +38,8 @@ class MemberTest {
     
     @Test
     void constructorNullCheck() {
-        assertThatThrownBy(() -> Member.create(null, "junwoo", "secret", null))
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest(null, "junwoo", "secret");
+        assertThatThrownBy(() -> Member.create(memberCreateRequest, null))
                 .isInstanceOf(NullPointerException.class);
     }
 
@@ -94,6 +96,15 @@ class MemberTest {
     void changePassword() {
         member.changePassword("newSecret", passwordEncoder);
         assertThat(member.verifyPassword("newSecret", passwordEncoder)).isTrue();
+    }
+
+    @Test
+    void isActive() {
+        assertThat(member.isActive()).isFalse();
+        member.activate();
+        assertThat(member.isActive()).isTrue();
+        member.deactivate();
+        assertThat(member.isActive()).isFalse();
     }
 
 }
