@@ -2,10 +2,11 @@ package tobyspring.splearn.domain;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.lang.NonNull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static tobyspring.splearn.fixture.MemberFixture.createMemberRegisterRequest;
+import static tobyspring.splearn.fixture.MemberFixture.createPasswordEncoder;
 
 
 class MemberTest {
@@ -15,19 +16,8 @@ class MemberTest {
 
     @BeforeEach
     void setUp() {
-        passwordEncoder = new PasswordEncoder() {
-            @Override
-            @NonNull
-            public String encode(String password) {
-                return password.toUpperCase();
-            }
-
-            @Override
-            public boolean matches(@NonNull String password, @NonNull String passwordHash) {
-                return encode(password).equals(passwordHash);
-            }
-        };
-        MemberRegisterRequest memberRegisterRequest = new MemberRegisterRequest("junwoo.choi@test.com", "junwoo", "secret");
+        passwordEncoder = createPasswordEncoder();
+        MemberRegisterRequest memberRegisterRequest = createMemberRegisterRequest("junwoo.choi@test.com");
         this.member = Member.register(memberRegisterRequest, passwordEncoder);
     }
 
@@ -38,7 +28,7 @@ class MemberTest {
     
     @Test
     void constructorNullCheck() {
-        MemberRegisterRequest memberRegisterRequest = new MemberRegisterRequest(null, "junwoo", "secret");
+        MemberRegisterRequest memberRegisterRequest = createMemberRegisterRequest(null);
         assertThatThrownBy(() -> Member.register(memberRegisterRequest, null))
                 .isInstanceOf(NullPointerException.class);
     }
@@ -109,9 +99,8 @@ class MemberTest {
 
     @Test
     void invalidEmail() {
-        assertThatThrownBy(() -> Member.register(new MemberRegisterRequest("INVALID_EMAIL", "junwoo", "secret"), passwordEncoder))
+        assertThatThrownBy(() -> Member.register(createMemberRegisterRequest("INVALID_EMAIL"), passwordEncoder))
                 .isInstanceOf(IllegalArgumentException.class);
     }
-
 
 }

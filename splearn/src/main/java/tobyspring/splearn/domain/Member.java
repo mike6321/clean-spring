@@ -1,5 +1,6 @@
 package tobyspring.splearn.domain;
 
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,14 +10,20 @@ import static java.util.Objects.requireNonNull;
 import static org.springframework.util.Assert.state;
 import static tobyspring.splearn.domain.MemberStatus.*;
 
+@Entity
 @Getter
 @ToString
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Embedded
     private Email email;
     private String nickname;
     private String passwordHash;
+    @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
     public void activate() {
