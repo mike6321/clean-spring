@@ -31,7 +31,7 @@ public class Member {
         this.status = DEACTIVATED;
     }
 
-    public static Member create(MemberCreateRequest createRequest, PasswordEncoder passwordEncoder) {
+    public static Member register(MemberRegisterRequest createRequest, PasswordEncoder passwordEncoder) {
         Member member = new Member();
 
         String email = createRequest.email();

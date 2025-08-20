@@ -27,19 +27,19 @@ class MemberTest {
                 return encode(password).equals(passwordHash);
             }
         };
-        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("junwoo.choi@test.com", "junwoo", "secret");
-        this.member = Member.create(memberCreateRequest, passwordEncoder);
+        MemberRegisterRequest memberRegisterRequest = new MemberRegisterRequest("junwoo.choi@test.com", "junwoo", "secret");
+        this.member = Member.register(memberRegisterRequest, passwordEncoder);
     }
 
     @Test
-    void createMember() {
+    void registerMember() {
         assertThat(member.getStatus()).isEqualTo(MemberStatus.PENDING);
     }
     
     @Test
     void constructorNullCheck() {
-        MemberCreateRequest memberCreateRequest = new MemberCreateRequest(null, "junwoo", "secret");
-        assertThatThrownBy(() -> Member.create(memberCreateRequest, null))
+        MemberRegisterRequest memberRegisterRequest = new MemberRegisterRequest(null, "junwoo", "secret");
+        assertThatThrownBy(() -> Member.register(memberRegisterRequest, null))
                 .isInstanceOf(NullPointerException.class);
     }
 
@@ -109,7 +109,7 @@ class MemberTest {
 
     @Test
     void invalidEmail() {
-        assertThatThrownBy(() -> Member.create(new MemberCreateRequest("INVALID_EMAIL", "junwoo", "secret"), passwordEncoder))
+        assertThatThrownBy(() -> Member.register(new MemberRegisterRequest("INVALID_EMAIL", "junwoo", "secret"), passwordEncoder))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
