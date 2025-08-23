@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @ContextConfiguration(classes = SplearnTestConfiguration.class)
 @Transactional
 //@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityManager) {
+record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityManager) {
 
     @Test
     void registerMember() {

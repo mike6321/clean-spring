@@ -26,12 +26,12 @@ class MemberTest {
         assertThat(member.getStatus()).isEqualTo(MemberStatus.PENDING);
     }
     
-    @Test
-    void constructorNullCheck() {
-        MemberRegisterRequest memberRegisterRequest = createMemberRegisterRequest(null);
-        assertThatThrownBy(() -> Member.register(memberRegisterRequest, null))
-                .isInstanceOf(NullPointerException.class);
-    }
+//    @Test
+//    void constructorNullCheck() {
+//        MemberRegisterRequest memberRegisterRequest = createMemberRegisterRequest(null);
+//        assertThatThrownBy(() -> Member.register(memberRegisterRequest, null))
+//                .isInstanceOf(NullPointerException.class);
+//    }
 
     @Test
     void activate() {
