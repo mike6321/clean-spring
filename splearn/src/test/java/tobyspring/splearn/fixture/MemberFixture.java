@@ -7,7 +7,7 @@ import tobyspring.splearn.domain.PasswordEncoder;
 public class MemberFixture {
 
     public static MemberRegisterRequest createMemberRegisterRequest(String mail) {
-        return new MemberRegisterRequest(mail, "junwoo", "secret");
+        return new MemberRegisterRequest(mail, "junwoo-great", "secret12345");
     }
 
     public static PasswordEncoder createPasswordEncoder() {
