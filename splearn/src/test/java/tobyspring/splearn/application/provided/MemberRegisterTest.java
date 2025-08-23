@@ -1,5 +1,6 @@
 package tobyspring.splearn.application.provided;
 
+import jakarta.persistence.EntityManager;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @ContextConfiguration(classes = SplearnTestConfiguration.class)
 @Transactional
 //@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-public record MemberRegisterTest(MemberRegister memberRegister) {
+public record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityManager) {
 
     @Test
     void registerMember() {
@@ -49,5 +50,19 @@ public record MemberRegisterTest(MemberRegister memberRegister) {
         assertThatThrownBy(() -> memberRegister.register(invalid1))
             .isInstanceOf(ConstraintViolationException.class);
     }
+
+    @Test
+    void activate() {
+        Member member = memberRegister.register(MemberFixture.createMemberRegisterRequest("test@test.com"));
+        entityManager.flush();
+        entityManager.clear();
+
+        member = memberRegister.activate(member.getId());
+
+        entityManager.flush();
+
+        assertThat(member.getStatus()).isEqualTo(MemberStatus.ACTIVE);
+    }
+
 
 }
