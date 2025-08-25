@@ -17,17 +17,15 @@ import static tobyspring.splearn.domain.MemberStatus.*;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @NaturalIdCache
-public class Member {
+public class Member extends AbstractEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Embedded
     @NaturalId
     private Email email;
+
     private String nickname;
+
     private String passwordHash;
-    @Enumerated(EnumType.STRING)
+
     private MemberStatus status;
 
     public void activate() {
