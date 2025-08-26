@@ -26,6 +26,8 @@ record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityMan
     void registerMember() {
         Member member = memberRegister.register(MemberFixture.createMemberRegisterRequest("test@test.com"));
 
+        System.out.println("member = " + member);
+
         assertThat(member.getId()).isNotNull();
         assertThat(member.getStatus()).isEqualTo(MemberStatus.PENDING);
     }

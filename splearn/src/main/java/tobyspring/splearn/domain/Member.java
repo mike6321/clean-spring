@@ -1,6 +1,6 @@
 package tobyspring.splearn.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ import static tobyspring.splearn.domain.MemberStatus.*;
 
 @Entity
 @Getter
-@ToString
+@ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @NaturalIdCache
 public class Member extends AbstractEntity {
