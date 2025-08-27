@@ -1,6 +1,7 @@
 package tobyspring.splearn.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,9 @@ public class Member extends AbstractEntity {
     private String passwordHash;
 
     private MemberStatus status;
+
+    @OneToMany
+    private MemberDetail detail;
 
     public void activate() {
         state(this.status == PENDING, "PENDING 상태의 회원만 활성화할 수 있습니다.");
