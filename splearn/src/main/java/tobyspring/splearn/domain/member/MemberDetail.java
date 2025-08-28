@@ -1,7 +1,5 @@
 package tobyspring.splearn.domain.member;
 
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,14 +12,12 @@ import java.util.Objects;
 
 import static org.springframework.util.Assert.state;
 
-@Entity
 @Getter
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @NaturalIdCache
 public class MemberDetail extends AbstractEntity {
 
-    @Embedded
     private Profile profile;
 
     private String introduction;

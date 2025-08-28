@@ -6,10 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import tobyspring.splearn.application.member.provided.MemberFinder;
 import tobyspring.splearn.application.member.provided.MemberRegister;
-import tobyspring.splearn.domain.member.DuplicationEmailException;
-import tobyspring.splearn.domain.member.Member;
-import tobyspring.splearn.domain.member.MemberRegisterRequest;
-import tobyspring.splearn.domain.member.PasswordEncoder;
+import tobyspring.splearn.domain.member.*;
 import tobyspring.splearn.domain.shared.Email;
 
 @Service
@@ -40,6 +37,24 @@ public class MemberModifyService implements MemberRegister {
         Member member = this.memberFinder.find(memberId);
 
         member.activate();
+
+        return this.memberRepository.save(member);
+    }
+
+    @Override
+    public Member deactivate(Long memberId) {
+        Member member = this.memberFinder.find(memberId);
+
+        member.deactivate();
+
+        return this.memberRepository.save(member);
+    }
+
+    @Override
+    public Member updateInfo(Long memberId, MemberInfoUpdateRequest updateRequest) {
+        Member member = this.memberFinder.find(memberId);
+
+        member.updateInfo(updateRequest);
 
         return this.memberRepository.save(member);
     }

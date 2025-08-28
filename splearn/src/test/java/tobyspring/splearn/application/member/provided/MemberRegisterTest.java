@@ -7,15 +7,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import tobyspring.splearn.SplearnTestConfiguration;
-import tobyspring.splearn.application.member.provided.MemberRegister;
-import tobyspring.splearn.domain.member.DuplicationEmailException;
-import tobyspring.splearn.domain.member.Member;
-import tobyspring.splearn.domain.member.MemberRegisterRequest;
-import tobyspring.splearn.domain.member.MemberStatus;
-import tobyspring.splearn.domain.member.MemberFixture;
+import tobyspring.splearn.domain.member.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static tobyspring.splearn.domain.member.MemberStatus.ACTIVE;
+import static tobyspring.splearn.domain.member.MemberStatus.DEACTIVATED;
 
 @SpringBootTest
 @ContextConfiguration(classes = SplearnTestConfiguration.class)
@@ -56,16 +53,53 @@ record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityMan
 
     @Test
     void activate() {
-        Member member = memberRegister.register(MemberFixture.createMemberRegisterRequest("test@test.com"));
-        entityManager.flush();
-        entityManager.clear();
+        Member member = createMember();
 
         member = memberRegister.activate(member.getId());
 
-        entityManager.flush();
+        flushAndClear();
 
-        assertThat(member.getStatus()).isEqualTo(MemberStatus.ACTIVE);
+        assertThat(member.getStatus()).isEqualTo(ACTIVE);
+        assertThat(member.getDetail().getActivatedAt()).isNotNull();
     }
 
+    @Test
+    void deactivate() {
+        Member member = createMember();
+
+        member = memberRegister.activate(member.getId());
+        flushAndClear();
+
+        member = memberRegister.deactivate(member.getId());
+        flushAndClear();
+
+        assertThat(member.getStatus()).isEqualTo(DEACTIVATED);
+        assertThat(member.getDetail().getDeActivatedAt()).isNotNull();
+    }
+
+    @Test
+    void updateInfo () {
+        Member member = createMember();
+
+        member = memberRegister.activate(member.getId());
+        flushAndClear();
+
+        MemberInfoUpdateRequest updateRequest = new MemberInfoUpdateRequest("newNickname", "new1234", "newPhone");
+        member = memberRegister.updateInfo(member.getId(), updateRequest);
+        flushAndClear();
+
+        assertThat(member.getDetail().getProfile().address()).isEqualTo(updateRequest.profileAddress());
+    }
+
+    private Member createMember() {
+        Member member = memberRegister.register(MemberFixture.createMemberRegisterRequest("test@test.com"));
+        flushAndClear();
+        return member;
+    }
+
+    private void flushAndClear() {
+        entityManager.flush();
+        entityManager.clear();
+    }
 
 }
