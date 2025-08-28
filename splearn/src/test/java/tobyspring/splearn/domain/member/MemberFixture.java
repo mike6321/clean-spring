@@ -1,8 +1,6 @@
-package tobyspring.splearn.fixture;
+package tobyspring.splearn.domain.member;
 
 import org.springframework.lang.NonNull;
-import tobyspring.splearn.domain.MemberRegisterRequest;
-import tobyspring.splearn.domain.PasswordEncoder;
 
 public class MemberFixture {
 

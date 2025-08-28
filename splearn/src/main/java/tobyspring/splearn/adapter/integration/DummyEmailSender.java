@@ -3,8 +3,8 @@ package tobyspring.splearn.adapter.integration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Fallback;
 import org.springframework.stereotype.Component;
-import tobyspring.splearn.application.required.EmailSender;
-import tobyspring.splearn.domain.Email;
+import tobyspring.splearn.application.member.required.EmailSender;
+import tobyspring.splearn.domain.shared.Email;
 
 @Slf4j
 @Component

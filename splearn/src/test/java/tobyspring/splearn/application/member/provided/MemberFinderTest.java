@@ -1,4 +1,4 @@
-package tobyspring.splearn.application.provided;
+package tobyspring.splearn.application.member.provided;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -7,8 +7,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
 import tobyspring.splearn.SplearnTestConfiguration;
-import tobyspring.splearn.domain.Member;
-import tobyspring.splearn.fixture.MemberFixture;
+import tobyspring.splearn.application.member.provided.MemberFinder;
+import tobyspring.splearn.application.member.provided.MemberRegister;
+import tobyspring.splearn.domain.member.Member;
+import tobyspring.splearn.domain.member.MemberFixture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

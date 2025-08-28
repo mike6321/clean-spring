@@ -1,12 +1,12 @@
-package tobyspring.splearn.domain;
+package tobyspring.splearn.domain.member;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static tobyspring.splearn.fixture.MemberFixture.createMemberRegisterRequest;
-import static tobyspring.splearn.fixture.MemberFixture.createPasswordEncoder;
+import static tobyspring.splearn.domain.member.MemberFixture.createMemberRegisterRequest;
+import static tobyspring.splearn.domain.member.MemberFixture.createPasswordEncoder;
 
 
 class MemberTest {
@@ -24,6 +24,7 @@ class MemberTest {
     @Test
     void registerMember() {
         assertThat(member.getStatus()).isEqualTo(MemberStatus.PENDING);
+        assertThat(member.getDetail().getRegisteredAt()).isNotNull();
     }
     
 //    @Test
@@ -40,6 +41,7 @@ class MemberTest {
 
         // then
         assertThat(member.getStatus()).isEqualTo(MemberStatus.ACTIVE);
+        assertThat(member.getDetail().getActivatedAt()).isNotNull();
     }
 
     @Test
@@ -60,6 +62,7 @@ class MemberTest {
 
         // then
         assertThat(member.getStatus()).isEqualTo(MemberStatus.DEACTIVATED);
+        assertThat(member.getDetail().getDeActivatedAt()).isNotNull();
     }
 
     @Test
@@ -102,5 +105,17 @@ class MemberTest {
         assertThatThrownBy(() -> Member.register(createMemberRegisterRequest("INVALID_EMAIL"), passwordEncoder))
                 .isInstanceOf(IllegalArgumentException.class);
     }
+
+    @Test
+    void updateInfo() {
+        this.member.activate();
+        MemberInfoUpdateRequest updateRequest = new MemberInfoUpdateRequest("newNickname", "new1234", "newPhone");
+        this.member.updateInfo(updateRequest);
+
+        assertThat(this.member.getDetail().getProfile().address()).isEqualTo(updateRequest.profileAddress());
+        assertThat(this.member.getNickname()).isEqualTo(updateRequest.nickname());
+        assertThat(this.member.getDetail().getIntroduction()).isEqualTo(updateRequest.introduction());
+    }
+
 
 }

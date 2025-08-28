@@ -1,18 +1,19 @@
-package tobyspring.splearn.application.required;
+package tobyspring.splearn.application.member.required;
 
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
-import tobyspring.splearn.domain.Member;
-import tobyspring.splearn.domain.MemberRegisterRequest;
-import tobyspring.splearn.domain.PasswordEncoder;
+import tobyspring.splearn.domain.member.Member;
+import tobyspring.splearn.domain.member.MemberRegisterRequest;
+import tobyspring.splearn.domain.member.MemberStatus;
+import tobyspring.splearn.domain.member.PasswordEncoder;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static tobyspring.splearn.fixture.MemberFixture.createMemberRegisterRequest;
-import static tobyspring.splearn.fixture.MemberFixture.createPasswordEncoder;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static tobyspring.splearn.domain.member.MemberFixture.createMemberRegisterRequest;
+import static tobyspring.splearn.domain.member.MemberFixture.createPasswordEncoder;
 
 @DataJpaTest
 class MemberRepositoryTest {
@@ -32,12 +33,20 @@ class MemberRepositoryTest {
         // when
         Member member = Member.register(memberRegisterRequest, passwordEncoder);
         Member saved = this.memberRepository.save(member);
-        this.entityManager.flush();
+        flushAndCler();
 
         // then
         assertThat(saved.getId()).isNotNull();
+        Member found = memberRepository.findById(saved.getId()).orElseThrow();
+        assertThat(found.getStatus()).isEqualTo(MemberStatus.PENDING);
+        assertThat(found.getDetail().getRegisteredAt()).isNotNull();
     }
-    
+
+    private void flushAndCler() {
+        this.entityManager.clear();
+        this.entityManager.flush();
+    }
+
     @Test
     void duplicatedEmailFail() {
         // given
@@ -52,7 +61,5 @@ class MemberRepositoryTest {
         assertThatThrownBy(() -> this.memberRepository.save(member2)).isInstanceOf(DataIntegrityViolationException.class);
 
     }
-    
-
 
 }
